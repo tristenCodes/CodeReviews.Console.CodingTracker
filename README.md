@@ -13,9 +13,9 @@ Coding Tracker is a way to track your time spent coding via the CLI. Enter a sta
 - when reading from the database, must not use an anonymous object, read your table into a List of Coding Sessions.
 - follow the DRY Principle, and avoid code repetition.
 
-## Technologies
+## Technologies Used
 
-- [.NET CORE](https://learn.microsoft.com/en-us/dotnet/)
+- [.NET Core](https://learn.microsoft.com/en-us/dotnet/)
 - [Spectre Console](https://spectreconsole.net/)
 - [SQLite](https://www.sqlite.org/)
 - [Dapper](https://www.learndapper.com/)
