@@ -1,2 +1,4 @@
 ﻿using System.Configuration;
-using System.Collections.Specialized;
+using Spectre.Console;
+
+AnsiConsole.MarkupLine("[underline red]Hello[/] World!");
