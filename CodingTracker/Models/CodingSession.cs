@@ -2,10 +2,8 @@ namespace CodingTracker.Models;
 
 public class CodingSession
 {
-    private DateTime _startTime;
-
     public int Id { get; set; }
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
-    public TimeSpan Duration { get; set; }
+    public required string StartTime { get; set; }
+    public required string EndTime { get; set; }
+    public string Duration { get; set; }
 }
