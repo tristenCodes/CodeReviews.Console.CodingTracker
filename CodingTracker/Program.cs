@@ -1,9 +1,12 @@
 ﻿using CodingTracker.Controllers;
+using Spectre.Console;
 
 SessionController sessionController = new();
 
-while (true)
+bool continueLoop = true;
+while (continueLoop)
 {
+
     var mainMenuSelection = MenuController.GetMainMenuSelection();
 
     switch (mainMenuSelection)
@@ -19,6 +22,14 @@ while (true)
             break;
         case "Remove coding session entry":
             sessionController.RemoveCodingSession();
+            break;
+        case "Exit":
+            continueLoop = false;
+            AnsiConsole.Write(
+                new FigletText("Bye!")
+                    .LeftJustified()
+                    .Color(Color.Blue));
+
             break;
         default:
             throw new Exception("Invalid menu selection");

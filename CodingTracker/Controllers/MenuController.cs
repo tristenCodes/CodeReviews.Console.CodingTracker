@@ -10,11 +10,16 @@ public static class MenuController
     public static string GetMainMenuSelection()
     {
         AnsiConsole.Clear();
+        AnsiConsole.Write(
+            new FigletText("Coding Tracker")
+                .LeftJustified()
+                .Color(Color.Green));
+
         var menuSelection = AnsiConsole.Prompt(
             new SelectionPrompt<string>().Title("What would you like to do?").AddChoices(new[]
             {
                 "Add coding session entry", "View coding session entries", "Update coding session entry",
-                "Remove coding session entry"
+                "Remove coding session entry", "Exit"
             }));
 
 
