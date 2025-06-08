@@ -6,11 +6,13 @@ SessionController sessionController = new();
 bool continueLoop = true;
 while (continueLoop)
 {
-
     var mainMenuSelection = MenuController.GetMainMenuSelection();
 
     switch (mainMenuSelection)
     {
+        case "Stopwatch mode":
+            sessionController.StartStopwatchSession();
+            break;
         case "Add coding session entry":
             sessionController.AddCodingSession();
             break;
@@ -25,11 +27,11 @@ while (continueLoop)
             break;
         case "Exit":
             continueLoop = false;
+            AnsiConsole.Clear();
             AnsiConsole.Write(
                 new FigletText("Bye!")
                     .LeftJustified()
                     .Color(Color.Blue));
-
             break;
         default:
             throw new Exception("Invalid menu selection");

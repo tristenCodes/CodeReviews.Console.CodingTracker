@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using CodingTracker.DTO;
 using CodingTracker.Models;
 using CodingTracker.Utility;
 using Spectre.Console;
@@ -13,12 +14,13 @@ public static class MenuController
         AnsiConsole.Write(
             new FigletText("Coding Tracker")
                 .LeftJustified()
-                .Color(Color.Green));
+                .Color(Color.Blue));
 
         var menuSelection = AnsiConsole.Prompt(
             new SelectionPrompt<string>().Title("What would you like to do?").AddChoices(new[]
             {
-                "Add coding session entry", "View coding session entries", "Update coding session entry",
+                "Stopwatch mode", "Add coding session entry", "View coding session entries",
+                "Update coding session entry",
                 "Remove coding session entry", "Exit"
             }));
 
@@ -26,35 +28,48 @@ public static class MenuController
         return menuSelection;
     }
 
-    public static (DateTime startTime, DateTime endTime, TimeSpan duration) AddCodingSession()
+    public static void StopwatchSession()
+    {
+        AnsiConsole.Clear();
+        AnsiConsole.MarkupLine("[green]Stopwatch session started...[/]");
+        AnsiConsole.MarkupLine("[grey]Press any key to stop the session.[/]");
+        Console.ReadKey();
+    }
+
+    public static void DisplayStopwatchSessionTimeSpan(TimeSpan timeSpan)
+    {
+        AnsiConsole.Clear();
+        AnsiConsole.MarkupLine($"[yellow]Time spent coding: {timeSpan.ToString("hh\\:mm\\:ss")}[/]");
+    }
+
+    public static (DateTime startTime, DateTime endTime) AddCodingSession()
     {
         AnsiConsole.Clear();
         var (startTime, endTime) = MenuController.GetStartAndEndTime();
         var startTimeDateTime = DateTimeHelper.ConvertStringToDateTime(startTime);
         var endTimeDateTime = DateTimeHelper.ConvertStringToDateTime(endTime);
-        var duration = DateTimeHelper.GetDurationFromDateTimes(startTimeDateTime, endTimeDateTime);
 
-        return (startTimeDateTime, endTimeDateTime, duration);
+        return (startTimeDateTime, endTimeDateTime);
     }
 
-    public static (int id, DateTime startTime, DateTime endTime) UpdateCodingSession(List<CodingSession> sessions)
+    public static (int id, DateTime startTime, DateTime endTime) UpdateCodingSession(List<CodingSessionDTO> sessions)
     {
         AnsiConsole.Clear();
         var selectedSession = AnsiConsole.Prompt(
-            new SelectionPrompt<CodingSession>()
-                .Title("Select a session to delete")
+            new SelectionPrompt<CodingSessionDTO>()
+                .Title("Select a session to update")
                 .AddChoices(sessions)
                 .UseConverter(session =>
-                    $"ID: {session.Id} | Start: {session.StartTime} - End: {session.EndTime} | Duration: {session.Duration}"));
+                    $"ID: {session.Id} | Start: {DateTimeHelper.GetReadableFormatFromDateTime(session.StartTime)} - End: {DateTimeHelper.GetReadableFormatFromDateTime(session.EndTime)} | Duration: {session.Duration}"));
 
-        int id = selectedSession.Id;
+        var id = selectedSession.Id;
         var (newStartTime, newEndTime) = GetStartAndEndTime();
 
         return (id, DateTimeHelper.ConvertStringToDateTime(newStartTime),
             DateTimeHelper.ConvertStringToDateTime(newEndTime));
     }
 
-    public static void ViewCodingSessions(List<CodingSession> sessions)
+    public static void ViewCodingSessions(List<CodingSessionDTO> sessions)
     {
         AnsiConsole.Clear();
         GenerateTableOfAllSessions(sessions);
@@ -62,17 +77,24 @@ public static class MenuController
         Console.ReadKey();
     }
 
-    public static int RemoveCodingSession(List<CodingSession> sessions)
+    public static int RemoveCodingSession(List<CodingSessionDTO> sessions)
     {
-        var selectedSession = AnsiConsole.Prompt(new SelectionPrompt<CodingSession>().Title("Select an entry to delete")
+        var selectedSession = AnsiConsole.Prompt(new SelectionPrompt<CodingSessionDTO>()
+            .Title("Select an entry to delete")
             .AddChoices(sessions)
             .UseConverter(s =>
-                $"ID: {s.Id} | Start: {s.StartTime} - End: {s.EndTime} | Duration: {s.Duration}"));
+                $"ID: {s.Id} | Start: {DateTimeHelper.GetReadableFormatFromDateTime(s.StartTime)} - End: {DateTimeHelper.GetReadableFormatFromDateTime(s.EndTime)} | Duration: {s.Duration}"));
 
         return selectedSession.Id;
     }
 
-    public static void GenerateTableOfAllSessions(List<CodingSession> sessions)
+    public static void DisplayUpdateSuccess(int sessionId)
+    {
+        AnsiConsole.MarkupLine($"[green]Session ID {sessionId} updated successfully[/]");
+        Console.ReadKey();
+    }
+
+    private static void GenerateTableOfAllSessions(List<CodingSessionDTO> sessions)
     {
         var table = new Table();
         table.AddColumn("ID");
@@ -83,12 +105,14 @@ public static class MenuController
 
         foreach (var session in sessions)
         {
-            table.AddRow(session.Id.ToString(), DateTimeHelper.GetReadableFormatFromString(session.StartTime) ?? "N/A",
-                DateTimeHelper.GetReadableFormatFromString(session.EndTime) ?? "N/A", session.Duration ?? "N/A");
+            table.AddRow(session.Id.ToString(),
+                DateTimeHelper.GetReadableFormatFromDateTime(session.StartTime) ?? "N/A",
+                DateTimeHelper.GetReadableFormatFromDateTime(session.EndTime) ?? "N/A", session.Duration.ToString("hh\\:mm\\:ss"));
         }
 
         AnsiConsole.Write(table);
     }
+
 
     private static (string startTime, string endTime) GetStartAndEndTime()
     {

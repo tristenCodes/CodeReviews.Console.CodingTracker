@@ -20,16 +20,14 @@ public static class DateTimeHelper
       return duration;
    }
 
+   public static TimeSpan ConvertStringToTimeSpan(string str)
+   {
+      return TimeSpan.Parse(str);
+   }
+
    public static string GetReadableFormatFromDateTime(DateTime dateTime)
    {
       var formattedDate = dateTime.ToString("MMM d, yy - HH:mm:ss");
       return formattedDate;
-   }
-
-   public static string GetReadableFormatFromString(string dateTimeString)
-   {
-     var dateTime = ConvertStringToDateTime(dateTimeString);
-     var formattedDate = dateTime.ToString("MMM d, yy - HH:mm:ss");
-     return formattedDate;
    }
 }
