@@ -57,13 +57,17 @@ public class SessionRepository
     {
         using var connection = new SqliteConnection(_connectionString);
         var duration = DateTimeHelper.GetDurationFromDateTimes(startTime, endTime);
-        connection.Execute("UPDATE coding_session SET start_time=@startTime, end_time=@endTime, duration=@duration");
+        connection.Execute(
+            "UPDATE coding_session SET start_time=@startTime, end_time=@endTime, duration=@duration WHERE id=@id",
+            new { startTime, endTime, duration, id });
     }
 
     public void RemoveSession(int id)
     {
+        using var connection = new SqliteConnection(_connectionString);
+        connection.Execute("DELETE FROM coding_session WHERE id=@id", new { id });
     }
-    
+
     private void SetConnectionString()
     {
         var projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", ".."));

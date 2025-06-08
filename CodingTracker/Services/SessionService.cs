@@ -44,7 +44,7 @@ public class SessionController
     {
         var sessions = sessionRepository.GetAllSessions();
         var selectedSessionId = MenuController.RemoveCodingSession(sessions);
-        
+
         sessionRepository.RemoveSession(selectedSessionId);
         AnsiConsole.MarkupLine($"[lime]Session with ID {selectedSessionId} deleted successfully[/]");
         Console.ReadKey();
@@ -60,11 +60,10 @@ public class SessionController
 
         var duration = DateTimeHelper.GetDurationFromDateTimes(start, end);
         MenuController.DisplayStopwatchSessionTimeSpan(duration);
-        
+
         sessionRepository.AddSession(start, end);
         AnsiConsole.MarkupLine("Coding session saved to database.");
         AnsiConsole.MarkupLine("[grey]Press any key to continue...[/]");
         Console.ReadKey();
     }
-
 }
