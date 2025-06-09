@@ -22,6 +22,12 @@ public class SessionRepository
     {
         using var connection = new SqliteConnection(_connectionString);
         var duration = DateTimeHelper.GetDurationFromDateTimes(startTime, endTime);
+        if (duration.Days > 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(duration),
+                "The duration of a coding session cannot be an entire day or more. If this wasn't a mistake, touch grass.");
+        }
+
         connection.Execute(
             "INSERT INTO coding_session (start_time, end_time, duration) VALUES (@startTime, @endTime, @duration)",
             new { startTime, endTime, duration });

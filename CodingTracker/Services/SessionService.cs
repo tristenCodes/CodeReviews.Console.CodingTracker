@@ -20,8 +20,19 @@ public class SessionController
 
     public void AddCodingSession()
     {
-        var (startTime, endTime) = MenuController.AddCodingSession();
-        sessionRepository.AddSession(startTime, endTime);
+        try
+        {
+            var (startTime, endTime) = MenuController.AddCodingSession();
+            sessionRepository.AddSession(startTime, endTime);
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            MenuController.DisplayArgumentOutOfRangeError(e);
+        }
+        finally
+        {
+            MenuController.DisplayPressAnyKeyPrompt();
+        }
     }
 
     public void ViewCodingSessions()
@@ -33,9 +44,11 @@ public class SessionController
         }
         catch (InvalidOperationException e)
         {
-            AnsiConsole.MarkupLine("[maroon]No existing coding sessions found in database.[/]");
-            AnsiConsole.MarkupLine(AppConstants.PressAnyKeyMarkup);
-            Console.ReadKey();
+            MenuController.DisplayNoSessionError();
+        }
+        finally
+        {
+            MenuController.DisplayPressAnyKeyPrompt();
         }
     }
 
@@ -52,9 +65,11 @@ public class SessionController
         }
         catch (InvalidOperationException e)
         {
-            AnsiConsole.MarkupLine("[maroon]No existing coding sessions found in database.[/]");
-            AnsiConsole.MarkupLine(AppConstants.PressAnyKeyMarkup);
-            Console.ReadKey();
+            MenuController.DisplayNoSessionError();
+        }
+        finally
+        {
+            MenuController.DisplayPressAnyKeyPrompt();
         }
     }
 
@@ -66,14 +81,15 @@ public class SessionController
             var selectedSessionId = MenuController.RemoveCodingSession(sessions);
 
             sessionRepository.RemoveSession(selectedSessionId);
-            AnsiConsole.MarkupLine($"[lime]Session with ID {selectedSessionId} deleted successfully[/]");
-            Console.ReadKey();
+            MenuController.DisplayRemoveSuccess(selectedSessionId);
         }
         catch (InvalidOperationException e)
         {
-            AnsiConsole.MarkupLine("[maroon]No existing coding sessions found in database.[/]");
-            AnsiConsole.MarkupLine(AppConstants.PressAnyKeyMarkup);
-            Console.ReadKey();
+            MenuController.DisplayNoSessionError();
+        }
+        finally
+        {
+            MenuController.DisplayPressAnyKeyPrompt();
         }
     }
 
@@ -90,7 +106,6 @@ public class SessionController
 
         sessionRepository.AddSession(start, end);
         AnsiConsole.MarkupLine("Coding session saved to database.");
-        AnsiConsole.MarkupLine(AppConstants.PressAnyKeyMarkup);
-        Console.ReadKey();
+        MenuController.DisplayPressAnyKeyPrompt();
     }
 }

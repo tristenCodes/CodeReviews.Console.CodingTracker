@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using CodingTracker.Constants;
 using CodingTracker.DTO;
 using CodingTracker.Models;
 using CodingTracker.Utility;
@@ -73,8 +74,6 @@ public static class MenuController
     {
         AnsiConsole.Clear();
         GenerateTableOfAllSessions(sessions);
-
-        Console.ReadKey();
     }
 
     public static int RemoveCodingSession(List<CodingSessionDTO> sessions)
@@ -91,7 +90,27 @@ public static class MenuController
     public static void DisplayUpdateSuccess(int sessionId)
     {
         AnsiConsole.MarkupLine($"[green]Session ID {sessionId} updated successfully[/]");
+    }
+    
+    public static void DisplayRemoveSuccess(int sessionId)
+    {
+        AnsiConsole.MarkupLine($"[green]Session ID {sessionId} removed successfully[/]");
+    }
+
+    public static void DisplayNoSessionError()
+    {
+        AnsiConsole.MarkupLine("[maroon]No existing coding sessions found in database.[/]");
+    }
+
+    public static void DisplayPressAnyKeyPrompt()
+    {
+        AnsiConsole.MarkupLine(AppConstants.PressAnyKeyMarkup);
         Console.ReadKey();
+    }
+
+    public static void DisplayArgumentOutOfRangeError(ArgumentOutOfRangeException e)
+    {
+        AnsiConsole.MarkupLine($"[red]Exception occurred: {e.Message}[/]");
     }
 
     private static void GenerateTableOfAllSessions(List<CodingSessionDTO> sessions)
