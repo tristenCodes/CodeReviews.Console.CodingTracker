@@ -26,28 +26,55 @@ public class SessionController
 
     public void ViewCodingSessions()
     {
-        var allSessions = sessionRepository.GetAllSessions();
-        MenuController.ViewCodingSessions(allSessions);
+        try
+        {
+            var allSessions = sessionRepository.GetAllSessions();
+            MenuController.ViewCodingSessions(allSessions);
+        }
+        catch (InvalidOperationException e)
+        {
+            AnsiConsole.MarkupLine("[maroon]No existing coding sessions found in database.[/]");
+            AnsiConsole.MarkupLine(AppConstants.PressAnyKeyMarkup);
+            Console.ReadKey();
+        }
     }
 
     public void UpdateCodingSession()
     {
-        var sessions = sessionRepository.GetAllSessions();
-        var (sessionId, newStartTime, newEndTime) = MenuController.UpdateCodingSession(sessions);
-        var duration = DateTimeHelper.GetDurationFromDateTimes(newStartTime, newEndTime);
+        try
+        {
+            var sessions = sessionRepository.GetAllSessions();
+            var (sessionId, newStartTime, newEndTime) = MenuController.UpdateCodingSession(sessions);
+            var duration = DateTimeHelper.GetDurationFromDateTimes(newStartTime, newEndTime);
 
-        sessionRepository.UpdateSession(sessionId, newStartTime, newEndTime);
-        MenuController.DisplayUpdateSuccess(sessionId);
+            sessionRepository.UpdateSession(sessionId, newStartTime, newEndTime);
+            MenuController.DisplayUpdateSuccess(sessionId);
+        }
+        catch (InvalidOperationException e)
+        {
+            AnsiConsole.MarkupLine("[maroon]No existing coding sessions found in database.[/]");
+            AnsiConsole.MarkupLine(AppConstants.PressAnyKeyMarkup);
+            Console.ReadKey();
+        }
     }
 
     public void RemoveCodingSession()
     {
-        var sessions = sessionRepository.GetAllSessions();
-        var selectedSessionId = MenuController.RemoveCodingSession(sessions);
+        try
+        {
+            var sessions = sessionRepository.GetAllSessions();
+            var selectedSessionId = MenuController.RemoveCodingSession(sessions);
 
-        sessionRepository.RemoveSession(selectedSessionId);
-        AnsiConsole.MarkupLine($"[lime]Session with ID {selectedSessionId} deleted successfully[/]");
-        Console.ReadKey();
+            sessionRepository.RemoveSession(selectedSessionId);
+            AnsiConsole.MarkupLine($"[lime]Session with ID {selectedSessionId} deleted successfully[/]");
+            Console.ReadKey();
+        }
+        catch (InvalidOperationException e)
+        {
+            AnsiConsole.MarkupLine("[maroon]No existing coding sessions found in database.[/]");
+            AnsiConsole.MarkupLine(AppConstants.PressAnyKeyMarkup);
+            Console.ReadKey();
+        }
     }
 
     public void StartStopwatchSession()
@@ -63,7 +90,7 @@ public class SessionController
 
         sessionRepository.AddSession(start, end);
         AnsiConsole.MarkupLine("Coding session saved to database.");
-        AnsiConsole.MarkupLine("[grey]Press any key to continue...[/]");
+        AnsiConsole.MarkupLine(AppConstants.PressAnyKeyMarkup);
         Console.ReadKey();
     }
 }

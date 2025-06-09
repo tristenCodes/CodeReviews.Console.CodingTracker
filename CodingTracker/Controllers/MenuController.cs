@@ -96,21 +96,29 @@ public static class MenuController
 
     private static void GenerateTableOfAllSessions(List<CodingSessionDTO> sessions)
     {
-        var table = new Table();
-        table.AddColumn("ID");
-        table.AddColumn("Start Time");
-        table.AddColumn("End Time");
-        table.AddColumn("Duration");
-
-
-        foreach (var session in sessions)
+        if (sessions.Count == 0)
         {
-            table.AddRow(session.Id.ToString(),
-                DateTimeHelper.GetReadableFormatFromDateTime(session.StartTime) ?? "N/A",
-                DateTimeHelper.GetReadableFormatFromDateTime(session.EndTime) ?? "N/A", session.Duration.ToString("hh\\:mm\\:ss"));
+            throw new InvalidOperationException();
         }
+        else
+        {
+            var table = new Table();
+            table.AddColumn("ID");
+            table.AddColumn("Start Time");
+            table.AddColumn("End Time");
+            table.AddColumn("Duration");
 
-        AnsiConsole.Write(table);
+
+            foreach (var session in sessions)
+            {
+                table.AddRow(session.Id.ToString(),
+                    DateTimeHelper.GetReadableFormatFromDateTime(session.StartTime) ?? "N/A",
+                    DateTimeHelper.GetReadableFormatFromDateTime(session.EndTime) ?? "N/A",
+                    session.Duration.ToString("hh\\:mm\\:ss"));
+            }
+
+            AnsiConsole.Write(table);
+        }
     }
 
 
