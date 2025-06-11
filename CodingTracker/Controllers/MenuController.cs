@@ -29,7 +29,7 @@ public static class MenuController
         return menuSelection;
     }
 
-    public static void StopwatchSession()
+    public static void StartStopwatchSession()
     {
         AnsiConsole.Clear();
         AnsiConsole.MarkupLine("[green]Stopwatch session started...[/]");
@@ -37,7 +37,7 @@ public static class MenuController
         Console.ReadKey();
     }
 
-    public static void DisplayStopwatchSessionTimeSpan(TimeSpan timeSpan)
+    public static void StopStopwatchSession(TimeSpan timeSpan)
     {
         AnsiConsole.Clear();
         AnsiConsole.MarkupLine($"[yellow]Time spent coding: {timeSpan.ToString("hh\\:mm\\:ss")}[/]");
@@ -78,6 +78,7 @@ public static class MenuController
 
     public static int RemoveCodingSession(List<CodingSessionDTO> sessions)
     {
+        AnsiConsole.Clear();
         var selectedSession = AnsiConsole.Prompt(new SelectionPrompt<CodingSessionDTO>()
             .Title("Select an entry to delete")
             .AddChoices(sessions)
@@ -117,7 +118,7 @@ public static class MenuController
     {
         if (sessions.Count == 0)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("No sessions exist currently.");
         }
         else
         {

@@ -97,12 +97,12 @@ public class SessionController
     {
         DateTime start = DateTime.Now;
 
-        MenuController.StopwatchSession();
+        MenuController.StartStopwatchSession();
 
         DateTime end = DateTime.Now;
 
         var duration = DateTimeHelper.GetDurationFromDateTimes(start, end);
-        MenuController.DisplayStopwatchSessionTimeSpan(duration);
+        MenuController.StopStopwatchSession(duration);
 
         sessionRepository.AddSession(start, end);
         AnsiConsole.MarkupLine("Coding session saved to database.");

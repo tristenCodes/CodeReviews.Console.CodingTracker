@@ -480,3 +480,4 @@ $RECYCLE.BIN/
 /CodingTracker.TomDonegan/TextFile1.txt
 
 ./.idea
+CodingTracker/db/coding-tracker.db
