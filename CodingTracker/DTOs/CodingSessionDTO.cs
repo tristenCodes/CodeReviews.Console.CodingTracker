@@ -1,6 +1,6 @@
 namespace CodingTracker.DTO;
 
-public class CodingSessionDTO
+public class CodingSessionDto
 {
     public int Id { get; set; }
     public DateTime StartTime { get; set; }

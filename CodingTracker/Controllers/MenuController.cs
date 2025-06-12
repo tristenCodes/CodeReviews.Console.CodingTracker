@@ -1,7 +1,5 @@
-using System.Runtime.CompilerServices;
 using CodingTracker.Constants;
 using CodingTracker.DTO;
-using CodingTracker.Models;
 using CodingTracker.Utility;
 using Spectre.Console;
 
@@ -53,11 +51,11 @@ public static class MenuController
         return (startTimeDateTime, endTimeDateTime);
     }
 
-    public static (int id, DateTime startTime, DateTime endTime) UpdateCodingSession(List<CodingSessionDTO> sessions)
+    public static (int id, DateTime startTime, DateTime endTime) UpdateCodingSession(List<CodingSessionDto> sessions)
     {
         AnsiConsole.Clear();
         var selectedSession = AnsiConsole.Prompt(
-            new SelectionPrompt<CodingSessionDTO>()
+            new SelectionPrompt<CodingSessionDto>()
                 .Title("Select a session to update")
                 .AddChoices(sessions)
                 .UseConverter(session =>
@@ -70,16 +68,16 @@ public static class MenuController
             DateTimeHelper.ConvertStringToDateTime(newEndTime));
     }
 
-    public static void ViewCodingSessions(List<CodingSessionDTO> sessions)
+    public static void ViewCodingSessions(List<CodingSessionDto> sessions)
     {
         AnsiConsole.Clear();
         GenerateTableOfAllSessions(sessions);
     }
 
-    public static int RemoveCodingSession(List<CodingSessionDTO> sessions)
+    public static int RemoveCodingSession(List<CodingSessionDto> sessions)
     {
         AnsiConsole.Clear();
-        var selectedSession = AnsiConsole.Prompt(new SelectionPrompt<CodingSessionDTO>()
+        var selectedSession = AnsiConsole.Prompt(new SelectionPrompt<CodingSessionDto>()
             .Title("Select an entry to delete")
             .AddChoices(sessions)
             .UseConverter(s =>
@@ -92,7 +90,7 @@ public static class MenuController
     {
         AnsiConsole.MarkupLine($"[green]Session ID {sessionId} updated successfully[/]");
     }
-    
+
     public static void DisplayRemoveSuccess(int sessionId)
     {
         AnsiConsole.MarkupLine($"[green]Session ID {sessionId} removed successfully[/]");
@@ -114,7 +112,7 @@ public static class MenuController
         AnsiConsole.MarkupLine($"[red]Exception occurred: {e.Message}[/]");
     }
 
-    private static void GenerateTableOfAllSessions(List<CodingSessionDTO> sessions)
+    private static void GenerateTableOfAllSessions(List<CodingSessionDto> sessions)
     {
         if (sessions.Count == 0)
         {

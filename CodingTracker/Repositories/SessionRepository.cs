@@ -33,10 +33,10 @@ public class SessionRepository
             new { startTime, endTime, duration });
     }
 
-    public List<CodingSessionDTO> GetAllSessions()
+    public List<CodingSessionDto> GetAllSessions()
     {
         var allSessions = _connection.Query<CodingSession>(_selectAllSql);
-        var allSessionsWithDateTimes = new List<CodingSessionDTO>();
+        var allSessionsWithDateTimes = new List<CodingSessionDto>();
 
         foreach (var codingSession in allSessions)
         {
@@ -44,7 +44,7 @@ public class SessionRepository
             var endTimeDateTime = DateTimeHelper.ConvertStringToDateTime(codingSession.StartTime);
             var duration = DateTimeHelper.ConvertStringToTimeSpan(codingSession.Duration);
 
-            var sessionWithDateTime = new CodingSessionDTO
+            var sessionWithDateTime = new CodingSessionDto
             {
                 Id = codingSession.Id,
                 StartTime = startTimeDateTime,

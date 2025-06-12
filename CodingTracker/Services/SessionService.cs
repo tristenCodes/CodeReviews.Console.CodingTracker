@@ -1,10 +1,5 @@
-using System.Configuration;
-using CodingTracker.Constants;
-using CodingTracker.Models;
 using CodingTracker.Repositories;
 using CodingTracker.Utility;
-using Dapper;
-using Microsoft.Data.Sqlite;
 using Spectre.Console;
 
 namespace CodingTracker.Controllers;
@@ -63,7 +58,7 @@ public class SessionController
             sessionRepository.UpdateSession(sessionId, newStartTime, newEndTime);
             MenuController.DisplayUpdateSuccess(sessionId);
         }
-        catch (InvalidOperationException e)
+        catch (InvalidOperationException)
         {
             MenuController.DisplayNoSessionError();
         }
