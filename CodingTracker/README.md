@@ -2,6 +2,10 @@
 
 Coding Tracker is a way to track your time spent coding via the CLI. Enter a start time and end time or start and stop the stopwatch to track your time.
 
+# Purpose
+
+The purpose of this project was to incorporate a strong separation of concerns. I attempted to make the code relatively uncoupled and independent.
+
 ## Project Requirements
 
 - show the data on the console, using the "Spectre.Console" library.
