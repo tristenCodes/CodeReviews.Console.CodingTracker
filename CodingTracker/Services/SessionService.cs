@@ -53,7 +53,6 @@ public class SessionController
         {
             var sessions = sessionRepository.GetAllSessions();
             var (sessionId, newStartTime, newEndTime) = MenuController.UpdateCodingSession(sessions);
-            var duration = DateTimeHelper.GetDurationFromDateTimes(newStartTime, newEndTime);
 
             sessionRepository.UpdateSession(sessionId, newStartTime, newEndTime);
             MenuController.DisplayUpdateSuccess(sessionId);
