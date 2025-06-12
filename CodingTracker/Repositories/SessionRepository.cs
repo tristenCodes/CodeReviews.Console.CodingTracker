@@ -73,11 +73,29 @@ public class SessionRepository
 
     private void SetConnection()
     {
-        var projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", ".."));
-        var relativeDbPath = ConfigurationManager.AppSettings.Get("DatabasePath");
-        var absoluteDbPath = Path.Combine(projectRoot, relativeDbPath);
+        var dbPath = ConfigurationManager.AppSettings.Get("DatabasePath"); // This will be "db/coding-tracker.db"
 
-        var connectionString = $"Data Source={absoluteDbPath}";
+        // Create the db directory if it doesn't exist
+        var dbDirectory = Path.GetDirectoryName(dbPath);
+        if (dbDirectory != null && !Directory.Exists(dbDirectory))
+        {
+            Directory.CreateDirectory(dbDirectory);
+        }
+
+        var connectionString = $"Data Source={dbPath}";
         _connection = new SqliteConnection(connectionString);
+
+        if (!File.Exists(dbPath))
+        {
+            _connection.Open();
+
+            const string createTableSql = @"CREATE TABLE IF NOT EXISTS coding_session (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            start_time TEXT NOT NULL,
+            end_time TEXT NOT NULL, 
+            duration TEXT NOT NULL)";
+
+            _connection.Execute(createTableSql);
+        }
     }
 }
