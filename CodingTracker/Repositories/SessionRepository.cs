@@ -9,18 +9,18 @@ namespace CodingTracker.Repositories;
 
 public class SessionRepository
 {
-    private string _connectionString;
+    private SqliteConnection _connection;
     private string _selectAllSql = Constants.AppConstants.SelectAllSessionsSql;
+
 
     public SessionRepository()
     {
-        SetConnectionString();
+        SetConnection();
     }
 
 
     public void AddSession(DateTime startTime, DateTime endTime)
     {
-        using var connection = new SqliteConnection(_connectionString);
         var duration = DateTimeHelper.GetDurationFromDateTimes(startTime, endTime);
         if (duration.Days > 0)
         {
@@ -28,15 +28,14 @@ public class SessionRepository
                 "The duration of a coding session cannot be an entire day or more. If this wasn't a mistake, touch grass.");
         }
 
-        connection.Execute(
+        _connection.Execute(
             "INSERT INTO coding_session (start_time, end_time, duration) VALUES (@startTime, @endTime, @duration)",
             new { startTime, endTime, duration });
     }
 
     public List<CodingSessionDTO> GetAllSessions()
     {
-        using var connection = new SqliteConnection(_connectionString);
-        var allSessions = connection.Query<CodingSession>(_selectAllSql);
+        var allSessions = _connection.Query<CodingSession>(_selectAllSql);
         var allSessionsWithDateTimes = new List<CodingSessionDTO>();
 
         foreach (var codingSession in allSessions)
@@ -61,25 +60,24 @@ public class SessionRepository
 
     public void UpdateSession(int id, DateTime startTime, DateTime endTime)
     {
-        using var connection = new SqliteConnection(_connectionString);
         var duration = DateTimeHelper.GetDurationFromDateTimes(startTime, endTime);
-        connection.Execute(
+        _connection.Execute(
             "UPDATE coding_session SET start_time=@startTime, end_time=@endTime, duration=@duration WHERE id=@id",
             new { startTime, endTime, duration, id });
     }
 
     public void RemoveSession(int id)
     {
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Execute("DELETE FROM coding_session WHERE id=@id", new { id });
+        _connection.Execute("DELETE FROM coding_session WHERE id=@id", new { id });
     }
 
-    private void SetConnectionString()
+    private void SetConnection()
     {
         var projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", ".."));
         var relativeDbPath = ConfigurationManager.AppSettings.Get("DatabasePath");
         var absoluteDbPath = Path.Combine(projectRoot, relativeDbPath);
 
-        _connectionString = $"Data Source={absoluteDbPath}";
+        var connectionString = $"Data Source={absoluteDbPath}";
+        _connection = new SqliteConnection(connectionString);
     }
 }
